@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def mergeFile(filePath1,filePath2,shop_id):
 	'''
@@ -49,6 +50,29 @@ def groupFile(filePath,fileName):
 	f = open(fileName,'w');
 	groupData.to_csv(f);
 	f.close();
+def showCurve(filePath,shop_id):
+	'''
+		desc: plot values of the features	
+		param:
+			shop_id:id of shop(stupid!)
+	'''
+	dateparse = lambda dates: pd.datetime.strptime(dates, '%Y-%m-%d')
+	data = pd.read_csv(filePath+str(shop_id), parse_dates='time_stamp', index_col='time_stamp',date_parser=dateparse)
+	
+	#head to show
+	headerShop = ['view_sum','pay_sum']
+	headerColor = ['red','green']
+	#curve showing
+	for i in range(0,len(headerShop)):
+		plt.plot(data[headerShop[i]], color=headerColor[i],label=headerShop[i])
+	plt.legend(loc='best')
+	plt.title(str(shop_id))
+	plt.savefig('curve/'+str(shop_id))
+	plt.close()				    
+
+
+
+
 
 if __name__ == "__main__":
 	dataFiles = {'user_view.txt':'user_view_group.txt',
@@ -61,7 +85,12 @@ if __name__ == "__main__":
 	
 	#merge file
 	numShop = 2000
+	#for i in range(1,numShop+1):
+	#	user_view = 'user_view/user_view-'+str(i)
+	#	user_pay= 'user_pay/user_pay-'+str(i)
+	#	mergeFile(user_pay,user_view,i)
+
+	#curve
+	curveFilePath = 'merge/'
 	for i in range(1,numShop+1):
-		user_view = 'user_view/user_view-'+str(i)
-		user_pay= 'user_pay/user_pay-'+str(i)
-		mergeFile(user_pay,user_view,i)
+		showCurve(curveFilePath,i)
