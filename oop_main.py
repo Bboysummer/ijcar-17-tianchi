@@ -42,14 +42,11 @@ class Model:
 		return None
 
 	def train(self):
-		kf = KFold(self.y.shape[0],self.n_folds,self.shuffle,self.random_state)
 		for regressor in self.rSet:
+			kf = KFold(self.y.shape[0],self.n_folds,self.shuffle,self.random_state)
 			for train_index,test_index in kf:
-				####################################
-				# Bug: None is not in list
-				####################################
     				regressor.fit(self.X[train_index],self.y[train_index])
-		preSet.append(regressor.predict(self.X))
+			preSet.append(regressor.predict(self.X))
 		return self.preSet
 
 if __name__ == '__main__':
